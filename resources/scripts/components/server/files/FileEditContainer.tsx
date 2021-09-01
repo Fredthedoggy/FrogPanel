@@ -98,7 +98,7 @@ export default () => {
             <div css={tw`flex flex-col-reverse sm:flex-row`}>
                 <RequireServerPermission permissions={'file.*'}>
                     <div css={`
-                        ${tw`mt-4 sm:mr-4 sm:mt-0 sm:w-48 overflow-auto`}
+                        ${tw`mt-4 sm:mr-4 sm:mt-0 w-48 overflow-auto`}
                         height: calc(100vh - 20rem);
                     `}
                     >
