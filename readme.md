@@ -21,8 +21,9 @@ Then, rebuild panel assets as shown [here](https://pterodactyl.io/community/cust
 ## Available Modifications
 
 ### Files In Editor
-**Name**: `Files-In-Editor`
-
-**Supported Pterodactyl Version(s)**: `1.5.1`
+ - **Name**: `Files-In-Editor`
+ - **Supported Pterodactyl Version(s)**: `1.5.1`
+ - **Github Branch**: [`fredthedoggy/view-files-in-editor`](https://github.com/Fredthedoggy/frogpanel/tree/fredthedoggy/view-files-in-editor)
 
 This modification shows all files in the current directory next to the file editing tab, for ease-of-use when editing multiple files at once.
+![Files-In-Editor Screenshot](https://fredthedoggy.nothing-to-see-he.re/58NjuSMIW.png "Files-In-Editor")
