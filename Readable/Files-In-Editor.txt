@@ -1,0 +1,546 @@
+FrogPanel's Readable Patch File, from https://github.com/Fredthedoggy/frogpanel
+To Install, Just Follow The File Names, and Line Numbers, and You'll be Good to Go!
+-----------------------------------------------------
+
+Open / Create The File "resources/scripts/components/NavigationBar.tsx"
+
+-------------------
+Go to Line 11
+-------
+Delete The Following Code:
+-------
+const Navigation = styled.div`
+    ${tw`w-full bg-neutral-900 shadow-md overflow-x-auto`};
+    & > div {
+        ${tw`mx-auto w-full flex items-center`};
+    }
+    & #logo {
+        ${tw`flex-1`};
+        & > a {
+            ${tw`text-2xl font-header px-4 no-underline text-neutral-200 hover:text-neutral-100 transition-colors duration-150`};
+        }
+-------------------
+Go to Line 27
+-------
+Delete The Following Code:
+-------
+const RightNavigation = styled.div`
+    ${tw`flex h-full items-center justify-center`};
+    & > a, & > .navigation-link {
+        ${tw`flex items-center h-full no-underline text-neutral-300 px-6 cursor-pointer transition-all duration-150`};
+        &:active, &:hover {
+            ${tw`text-neutral-100 bg-black`};
+        }
+        &:active, &:hover, &.active {
+            box-shadow: inset 0 -2px ${theme`colors.cyan.700`.toString()};
+        }
+-----------------------------------------------------
+
+Open / Create The File "resources/scripts/components/server/files/FileEditContainer.tsx"
+
+-------------------
+Go to Line 20
+-------
+Delete The Following Code:
+-------
+import ErrorBoundary from '@/components/elements/ErrorBoundary';
+import { encodePathSegments, hashToPath } from '@/helpers';
+import { dirname } from 'path';
+-------
+Add The Following Code:
+-------
+import RequireServerPermission from '@/hoc/RequireServerPermission';
+import FileViewer from '@/components/server/files/FileViewer';
+-------
+Delete The Following Code:
+-------
+const LazyCodemirrorEditor = lazy(() => import(/* webpackChunkName: "editor" */'@/components/elements/CodemirrorEditor'));
+-------------------
+Go to Line 89
+-------
+Delete The Following Code:
+-------
+    return (
+        <PageContentBlock>
+            <FlashMessageRender byKey={'files:view'} css={tw`mb-4`}/>
+            <ErrorBoundary>
+                <div css={tw`mb-4`}>
+                    <FileManagerBreadcrumbs withinFileEditor isNewFile={action !== 'edit'}/>
+                </div>
+            </ErrorBoundary>
+            {hash.replace(/^#/, '').endsWith('.pteroignore') &&
+            <div css={tw`mb-4 p-4 border-l-4 bg-neutral-900 rounded border-cyan-400`}>
+                <p css={tw`text-neutral-300 text-sm`}>
+                    You&apos;re editing
+                    a <code css={tw`font-mono bg-black rounded py-px px-1`}>.pteroignore</code> file.
+                    Any files or directories listed in here will be excluded from backups. Wildcards are supported by
+                    using an asterisk (<code css={tw`font-mono bg-black rounded py-px px-1`}>*</code>). You can
+                    negate a prior rule by prepending an exclamation point
+                    (<code css={tw`font-mono bg-black rounded py-px px-1`}>!</code>).
+                </p>
+            </div>
+            }
+            <FileNameModal
+                visible={modalVisible}
+                onDismissed={() => setModalVisible(false)}
+                onFileNamed={(name) => {
+                    setModalVisible(false);
+                    save(name);
+                }}
+            />
+            <div css={tw`relative`}>
+                <SpinnerOverlay visible={loading}/>
+                <LazyCodemirrorEditor
+                    mode={mode}
+                    filename={hash.replace(/^#/, '')}
+                    onModeChanged={setMode}
+                    initialContent={content}
+                    fetchContent={value => {
+                        fetchFileContent = value;
+                    }}
+                    onContentSaved={() => {
+                        if (action !== 'edit') {
+                            setModalVisible(true);
+                        } else {
+                            save();
+                        }
+                    }}
+                />
+            </div>
+            <div css={tw`flex justify-end mt-4`}>
+                <div css={tw`flex-1 sm:flex-none rounded bg-neutral-900 mr-4`}>
+                    <Select value={mode} onChange={e => setMode(e.currentTarget.value)}>
+                        {modes.map(mode => (
+                            <option key={`${mode.name}_${mode.mime}`} value={mode.mime}>
+                                {mode.name}
+                            </option>
+                        ))}
+                    </Select>
+                </div>
+                {action === 'edit' ?
+                    <Can action={'file.update'}>
+                        <Button css={tw`flex-1 sm:flex-none`} onClick={() => save()}>
+                            Save Content
+                        </Button>
+                    </Can>
+                    :
+                    <Can action={'file.create'}>
+                        <Button css={tw`flex-1 sm:flex-none`} onClick={() => setModalVisible(true)}>
+                            Create File
+                        </Button>
+                    </Can>
+                }
+-------
+Add The Following Code:
+-------
+            <div css={tw`flex flex-col-reverse sm:flex-row`}>
+                <RequireServerPermission permissions={'file.*'}>
+                    <div css={`
+                        ${tw`mt-4 sm:mr-4 sm:mt-0 sm:w-48 overflow-auto`}
+                        height: calc(100vh - 20rem);
+                    `}
+                    >
+                        <FileViewer details={false} maxFiles={100}/>
+                    </div>
+                </RequireServerPermission>
+                <div css={tw`flex-grow`}>
+                    <FlashMessageRender byKey={'files:view'} css={tw`mb-4`}/>
+                    {hash.replace(/^#/, '').endsWith('.pteroignore') &&
+                    <div css={tw`mb-4 p-4 border-l-4 bg-neutral-900 rounded border-cyan-400`}>
+                        <p css={tw`text-neutral-300 text-sm`}>
+                            You&apos;re editing
+                            a <code css={tw`font-mono bg-black rounded py-px px-1`}>.pteroignore</code> file.
+                            Any files or directories listed in here will be excluded from backups. Wildcards are
+                            supported
+                            by
+                            using an asterisk (<code css={tw`font-mono bg-black rounded py-px px-1`}>*</code>). You
+                            can
+                            negate a prior rule by prepending an exclamation point
+                            (<code css={tw`font-mono bg-black rounded py-px px-1`}>!</code>).
+                        </p>
+                    </div>
+                    }
+                    <FileNameModal
+                        visible={modalVisible}
+                        onDismissed={() => setModalVisible(false)}
+                        onFileNamed={(name) => {
+                            setModalVisible(false);
+                            save(name);
+                        }}
+                    />
+                    <div>
+                        <div css={tw`relative`}>
+                            <SpinnerOverlay visible={loading}/>
+                            <LazyCodemirrorEditor
+                                mode={mode}
+                                filename={hash.replace(/^#/, '')}
+                                onModeChanged={setMode}
+                                initialContent={content}
+                                fetchContent={value => {
+                                    fetchFileContent = value;
+                                }}
+                                onContentSaved={() => {
+                                    if (action !== 'edit') {
+                                        setModalVisible(true);
+                                    } else {
+                                        save();
+                                    }
+                                }}
+                            />
+                        </div>
+                        <div css={tw`flex justify-end mt-4`}>
+                            <div css={tw`flex-1 sm:flex-none rounded bg-neutral-900 mr-4`}>
+                                <Select value={mode} onChange={e => setMode(e.currentTarget.value)}>
+                                    {modes.map(mode => (
+                                        <option key={`${mode.name}_${mode.mime}`} value={mode.mime}>
+                                            {mode.name}
+                                        </option>
+                                    ))}
+                                </Select>
+                            </div>
+                            {action === 'edit' ?
+                                <Can action={'file.update'}>
+                                    <Button css={tw`flex-1 sm:flex-none`} onClick={() => save()}>
+                                        Save Content
+                                    </Button>
+                                </Can>
+                                :
+                                <Can action={'file.create'}>
+                                    <Button css={tw`flex-1 sm:flex-none`} onClick={() => setModalVisible(true)}>
+                                        Create File
+                                    </Button>
+                                </Can>
+                            }
+                        </div>
+                    </div>
+                </div>
+-------
+Delete The Following Code:
+-------
+            </div>
+        </PageContentBlock>
+    );
+-----------------------------------------------------
+
+Open / Create The File "resources/scripts/components/server/files/FileManagerContainer.tsx"
+
+-------------------
+Go to Line 2
+-------
+Delete The Following Code:
+-------
+import React, { useEffect } from 'react';
+import { httpErrorToHuman } from '@/api/http';
+import { CSSTransition } from 'react-transition-group';
+import Spinner from '@/components/elements/Spinner';
+import FileObjectRow from '@/components/server/files/FileObjectRow';
+import FileManagerBreadcrumbs from '@/components/server/files/FileManagerBreadcrumbs';
+import { FileObject } from '@/api/server/files/loadDirectory';
+import NewDirectoryButton from '@/components/server/files/NewDirectoryButton';
+import { NavLink, useLocation } from 'react-router-dom';
+import Can from '@/components/elements/Can';
+-------------------
+Go to Line 14
+-------
+Delete The Following Code:
+-------
+import Button from '@/components/elements/Button';
+import { ServerContext } from '@/state/server';
+import useFileManagerSwr from '@/plugins/useFileManagerSwr';
+import MassActionsBar from '@/components/server/files/MassActionsBar';
+import UploadButton from '@/components/server/files/UploadButton';
+import ServerContentBlock from '@/components/elements/ServerContentBlock';
+import { useStoreActions } from '@/state/hooks';
+import ErrorBoundary from '@/components/elements/ErrorBoundary';
+import { FileActionCheckbox } from '@/components/server/files/SelectFileCheckbox';
+import { hashToPath } from '@/helpers';
+const sortFiles = (files: FileObject[]): FileObject[] => {
+    return files.sort((a, b) => a.name.localeCompare(b.name))
+        .sort((a, b) => a.isFile === b.isFile ? 0 : (a.isFile ? 1 : -1));
+};
+-------
+Add The Following Code:
+-------
+import FileViewer from '@/components/server/files/FileViewer';
+-------
+Delete The Following Code:
+-------
+export default () => {
+    const id = ServerContext.useStoreState(state => state.server.data!.id);
+-------------------
+Go to Line 75
+-------
+Delete The Following Code:
+-------
+                </ErrorBoundary>
+                <Can action={'file.create'}>
+                    <ErrorBoundary>
+                        <div css={tw`flex flex-shrink-0 flex-wrap-reverse md:flex-nowrap justify-end mb-4 md:mb-0 ml-0 md:ml-auto`}>
+-------
+Add The Following Code:
+-------
+                        <div
+                            css={tw`flex flex-shrink-0 flex-wrap-reverse md:flex-nowrap justify-end mb-4 md:mb-0 ml-0 md:ml-auto`}
+                        >
+-------
+Delete The Following Code:
+-------
+                            <NewDirectoryButton css={tw`w-full flex-none mt-4 sm:mt-0 sm:w-auto sm:mr-4`}/>
+                            <UploadButton css={tw`flex-1 mr-4 sm:flex-none sm:mt-0`}/>
+                            <NavLink
+-------------------
+Go to Line 90
+-------
+Delete The Following Code:
+-------
+                    </ErrorBoundary>
+                </Can>
+            </div>
+            {
+                !files ?
+                    <Spinner size={'large'} centered/>
+                    :
+                    <>
+                        {!files.length ?
+                            <p css={tw`text-sm text-neutral-400 text-center`}>
+                                This directory seems to be empty.
+                            </p>
+                            :
+                            <CSSTransition classNames={'fade'} timeout={150} appear in>
+                                <div>
+                                    {files.length > 250 &&
+                                    <div css={tw`rounded bg-yellow-400 mb-px p-3`}>
+                                        <p css={tw`text-yellow-900 text-sm text-center`}>
+                                            This directory is too large to display in the browser,
+                                            limiting the output to the first 250 files.
+                                        </p>
+                                    </div>
+                                    }
+                                    {
+                                        sortFiles(files.slice(0, 250)).map(file => (
+                                            <FileObjectRow key={file.key} file={file}/>
+                                        ))
+                                    }
+                                    <MassActionsBar/>
+                                </div>
+                            </CSSTransition>
+                        }
+                    </>
+            }
+-------
+Add The Following Code:
+-------
+            <FileViewer/>
+-------
+Delete The Following Code:
+-------
+        </ServerContentBlock>
+    );
+};
+-----------------------------------------------------
+
+Open / Create The File "resources/scripts/components/server/files/FileObjectRow.tsx"
+
+-------------------
+Go to Line 32
+-------
+Delete The Following Code:
+-------
+            </div>
+            :
+            <NavLink
+                to={`${match.url}${file.isFile ? '/edit' : ''}#${encodePathSegments(join(directory, file.name))}`}
+-------
+Add The Following Code:
+-------
+                to={`${match.url.endsWith('/edit') ? match.url.slice(0, match.url.length - 5) : match.url}${file.isFile ? '/edit' : ''}#${encodePathSegments(join(directory, file.name))}`}
+-------
+Delete The Following Code:
+-------
+                css={tw`flex flex-1 text-neutral-300 no-underline p-3 overflow-hidden truncate`}
+            >
+                {children}
+-------------------
+Go to Line 40
+-------
+Delete The Following Code:
+-------
+    );
+}, isEqual);
+const FileObjectRow = ({ file }: { file: FileObject }) => (
+-------
+Add The Following Code:
+-------
+const FileObjectRow = ({ file, details }: { file: FileObject, details: boolean }) => (
+-------
+Delete The Following Code:
+-------
+    <Row
+        key={file.name}
+        onContextMenu={e => {
+-------------------
+Go to Line 48
+-------
+Delete The Following Code:
+-------
+            window.dispatchEvent(new CustomEvent(`pterodactyl:files:ctx:${file.key}`, { detail: e.clientX }));
+        }}
+    >
+        <SelectFileCheckbox name={file.name}/>
+-------
+Add The Following Code:
+-------
+        { details &&
+            <SelectFileCheckbox name={file.name}/>
+        }
+-------
+Delete The Following Code:
+-------
+        <Clickable file={file}>
+            <div css={tw`flex-none self-center text-neutral-400 ml-6 mr-4 text-lg pl-3`}>
+-------
+Add The Following Code:
+-------
+            <div css={`
+${tw`flex-none self-center text-neutral-400 ml-0 mr-4 text-lg pl-1`}
+${details && tw`ml-6 pl-3`}
+`}
+            >
+-------
+Delete The Following Code:
+-------
+                {file.isFile ?
+                    <FontAwesomeIcon icon={file.isSymlink ? faFileImport : file.isArchiveType() ? faFileArchive : faFileAlt}/>
+-------
+Add The Following Code:
+-------
+                    <FontAwesomeIcon
+                        icon={file.isSymlink ? faFileImport : file.isArchiveType() ? faFileArchive : faFileAlt}
+                    />
+-------
+Delete The Following Code:
+-------
+                    :
+                    <FontAwesomeIcon icon={faFolder}/>
+                }
+-------------------
+Go to Line 60
+-------
+Delete The Following Code:
+-------
+            <div css={tw`flex-1 truncate`}>
+                {file.name}
+            </div>
+            {file.isFile &&
+-------
+Add The Following Code:
+-------
+            {file.isFile && details &&
+-------
+Delete The Following Code:
+-------
+            <div css={tw`w-1/6 text-right mr-4 hidden sm:block`}>
+                {bytesToHuman(file.size)}
+            </div>
+            }
+-------
+Add The Following Code:
+-------
+            {details &&
+-------
+Delete The Following Code:
+-------
+            <div
+                css={tw`w-1/5 text-right mr-4 hidden md:block`}
+                title={file.modifiedAt.toString()}
+-------------------
+Go to Line 74
+-------
+Delete The Following Code:
+-------
+                    :
+                    formatDistanceToNow(file.modifiedAt, { addSuffix: true })
+                }
+            </div>
+-------
+Add The Following Code:
+-------
+            </div>}
+-------
+Delete The Following Code:
+-------
+        </Clickable>
+        <FileDropdownMenu file={file}/>
+    </Row>
+-----------------------------------------------------
+
+Open / Create The File "resources/scripts/components/server/files/FileViewer.tsx"
+
+-------------------
+Go to Line 1
+-------
+Add The Following Code:
+-------
+import React, { useEffect } from 'react';
+import { CSSTransition } from 'react-transition-group';
+import Spinner from '@/components/elements/Spinner';
+import FileObjectRow from '@/components/server/files/FileObjectRow';
+import { FileObject } from '@/api/server/files/loadDirectory';
+import tw from 'twin.macro';
+import useFileManagerSwr from '@/plugins/useFileManagerSwr';
+import MassActionsBar from '@/components/server/files/MassActionsBar';
+import { ServerContext } from '@/state/server';
+const sortFiles = (files: FileObject[]): FileObject[] => {
+    return files.sort((a, b) => a.name.localeCompare(b.name))
+        .sort((a, b) => a.isFile === b.isFile ? 0 : (a.isFile ? 1 : -1));
+};
+export default (props: {
+    details?: boolean;
+    maxFiles?: number;
+}) => {
+    const details = props.details ?? true;
+    const maxFiles = props.maxFiles ?? 250;
+    const { data: files, mutate } = useFileManagerSwr();
+    const directory = ServerContext.useStoreState(state => state.files.directory);
+    useEffect(() => {
+        mutate();
+    }, [ directory ]);
+    return (
+        <>
+            {
+                !files ?
+                    <Spinner size={'large'} centered/>
+                    :
+                    <>
+                        {!files.length ?
+                            <p css={tw`text-sm text-neutral-400 text-center`}>
+                                This directory seems to be empty.
+                            </p>
+                            :
+                            <CSSTransition classNames={'fade'} timeout={150} appear in>
+                                <div>
+                                    {files.length > maxFiles &&
+                                    <div css={tw`rounded bg-yellow-400 mb-px p-3`}>
+                                        <p css={tw`text-yellow-900 text-sm text-center`}>
+                                            This directory is too large to display in the browser,
+                                            limiting the output to the first {maxFiles} files.
+                                        </p>
+                                    </div>
+                                    }
+                                    {
+                                        sortFiles(files.slice(0, maxFiles)).map(file => (
+                                            <FileObjectRow details={details} key={file.key} file={file}/>
+                                        ))
+                                    }
+                                    <MassActionsBar/>
+                                </div>
+                            </CSSTransition>
+                        }
+                    </>
+            }
+        </>);
+};
+-----------------------------------------------------
+
+You're All Done!
+Nice Job!

@@ -1,0 +1,11 @@
+{
+  "name": "frogpanel",
+  "main": "Scripts/index.js",
+  "author": "Fredthedoggy",
+  "dependencies": {
+    "parse-diff": "^0.8.1"
+  },
+  "scripts": {
+    "createReadable": "node Scripts/index.js"
+  }
+}
