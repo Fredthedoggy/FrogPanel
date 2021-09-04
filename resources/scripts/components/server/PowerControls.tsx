@@ -15,14 +15,14 @@ const PowerControls = () => {
     };
 
     return (
-        <div css={tw`shadow-md bg-neutral-700 rounded p-3 flex flex-wrap text-xs justify-center justify-around`}>
+        <div css={tw`shadow-md bg-neutral-700 rounded p-3 flex text-xs justify-center`}>
             <Can action={'control.start'}>
                 <Button
                     size={'xsmall'}
                     color={'green'}
                     isSecondary
+                    css={tw`mr-2`}
                     disabled={status !== 'offline'}
-                    css={tw`sm:flex-grow lg:flex-grow-0`}
                     onClick={e => {
                         e.preventDefault();
                         sendPowerCommand('start');
@@ -35,8 +35,8 @@ const PowerControls = () => {
                 <Button
                     size={'xsmall'}
                     isSecondary
+                    css={tw`mr-2`}
                     disabled={!status}
-                    css={tw`sm:flex-grow lg:flex-grow-0`}
                     onClick={e => {
                         e.preventDefault();
                         sendPowerCommand('restart');
