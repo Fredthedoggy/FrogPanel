@@ -22,7 +22,7 @@ Then, rebuild panel assets as shown [here](https://pterodactyl.io/community/cust
 To install a patch manually, visit [github.com/Fredthedoggy/frogpanel/tree/installation/Readable](https://github.com/Fredthedoggy/frogpanel/tree/installation/Readable), and select a patch to apply.
 Follow the instructions in the `.txt` file, copy/pasting things into the correct locations.
 
-> :warning: If You Have made previous edits to these files, the line numbers *will* be off. Pleae consult the official pterodactyl branch for your release, and compare the file to yours, adjusting line numbers appropriately.
+> :warning: If you have made previous edits to these files, the line numbers *will* be off. Pleae consult the official pterodactyl branch for your release, and compare the file to yours, adjusting line numbers appropriately.
 
 Then, rebuild panel assets as shown [here](https://pterodactyl.io/community/customization/panel.html)
 
