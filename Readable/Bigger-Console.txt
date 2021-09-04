@@ -1,0 +1,308 @@
+FrogPanel's Readable Patch File, from https://github.com/Fredthedoggy/frogpanel
+To Install, Just Follow The File Names, and Line Numbers, and You'll be Good to Go!
+-----------------------------------------------------
+
+Open / Create The File "resources/scripts/components/server/Console.tsx"
+
+-------------------
+Go to Line 45
+-------
+Delete The Following Code:
+-------
+    allowTransparency: true,
+    fontSize: 12,
+    fontFamily: 'Menlo, Monaco, Consolas, monospace',
+    rows: 30,
+-------
+Add The Following Code:
+-------
+    rows: Math.round((window.innerHeight - 250) / 14),
+-------
+Delete The Following Code:
+-------
+    theme: theme,
+};
+-------------------
+Go to Line 204
+-------
+Delete The Following Code:
+-------
+    return (
+        <div css={tw`text-xs font-mono relative`}>
+            <SpinnerOverlay visible={!connected} size={'large'} />
+-------
+Add The Following Code:
+-------
+            <SpinnerOverlay visible={!connected} size={'large'}/>
+-------
+Delete The Following Code:
+-------
+            <div
+                css={[
+                    tw`rounded-t p-2 bg-black w-full`,
+-------------------
+Go to Line 212
+-------
+Delete The Following Code:
+-------
+                ]}
+                style={{ minHeight: '16rem' }}
+            >
+                <TerminalDiv id={'terminal'} ref={ref} />
+-------
+Add The Following Code:
+-------
+                <TerminalDiv id={'terminal'} ref={ref}/>
+-------
+Delete The Following Code:
+-------
+            </div>
+            {canSendCommands &&
+                <div css={tw`rounded-b bg-neutral-900 text-neutral-100 flex items-baseline`}>
+                    <div css={tw`flex-shrink-0 p-2 font-bold`}>$</div>
+                    <div css={tw`w-full`}>
+                        <CommandInput
+                            type={'text'}
+                            placeholder={'Type a command...'}
+                            aria-label={'Console command input.'}
+                            disabled={!instance || !connected}
+                            onKeyDown={handleCommandKeyDown}
+                        />
+                    </div>
+                </div>
+-------
+Add The Following Code:
+-------
+            <div css={tw`rounded-b bg-neutral-900 text-neutral-100 flex items-baseline`}>
+                <div css={tw`flex-shrink-0 p-2 font-bold`}>$</div>
+                <div css={tw`w-full`}>
+                    <CommandInput
+                        type={'text'}
+                        placeholder={'Type a command...'}
+                        aria-label={'Console command input.'}
+                        disabled={!instance || !connected}
+                        onKeyDown={handleCommandKeyDown}
+                    />
+                </div>
+            </div>
+-------
+Delete The Following Code:
+-------
+            }
+        </div>
+    );
+-----------------------------------------------------
+
+Open / Create The File "resources/scripts/components/server/PowerControls.tsx"
+
+-------------------
+Go to Line 16
+-------
+Delete The Following Code:
+-------
+    };
+    return (
+        <div css={tw`shadow-md bg-neutral-700 rounded p-3 flex text-xs mt-4 justify-center`}>
+-------
+Add The Following Code:
+-------
+        <div css={tw`shadow-md bg-neutral-700 rounded p-3 flex text-xs justify-center`}>
+-------
+Delete The Following Code:
+-------
+            <Can action={'control.start'}>
+                <Button
+                    size={'xsmall'}
+-----------------------------------------------------
+
+Open / Create The File "resources/scripts/components/server/ServerConsole.tsx"
+
+-------------------
+Go to Line 23
+-------
+Delete The Following Code:
+-------
+    const eggFeatures = ServerContext.useStoreState(state => state.server.data!.eggFeatures, isEqual);
+    return (
+        <ServerContentBlock title={'Console'} css={tw`flex flex-wrap`}>
+            <div css={tw`w-full lg:w-1/4`}>
+                <ServerDetailsBlock/>
+-------
+Add The Following Code:
+-------
+        <ServerContentBlock title={'Console'} css={tw`flex flex-col space-y-6 md:flex-row md:space-y-0`}>
+            <div css={tw`w-full md:w-3/4 mt-4 md:mt-0 md:pr-4`}>
+                <Spinner.Suspense>
+                    <ErrorBoundary>
+                        <ChunkedConsole/>
+                    </ErrorBoundary>
+                </Spinner.Suspense>
+                <React.Suspense fallback={null}>
+                    {eggFeatures.includes('eula') && <EulaModalFeature/>}
+                    {eggFeatures.includes('java_version') && <JavaVersionModalFeature/>}
+                </React.Suspense>
+            </div>
+            <div css={tw`w-full md:w-1/4 flex flex-col space-y-6`}>
+-------
+Delete The Following Code:
+-------
+                {isInstalling ?
+                    <div css={tw`mt-4 rounded bg-yellow-500 p-3`}>
+-------
+Add The Following Code:
+-------
+                    <div css={tw`rounded bg-yellow-500 p-3`}>
+-------
+Delete The Following Code:
+-------
+                        <ContentContainer>
+                            <p css={tw`text-sm text-yellow-900`}>
+                                This server is currently running its installation process and most actions are
+-------------------
+Go to Line 37
+-------
+Delete The Following Code:
+-------
+                    </div>
+                    :
+                    isTransferring ?
+                        <div css={tw`mt-4 rounded bg-yellow-500 p-3`}>
+-------
+Add The Following Code:
+-------
+                        <div css={tw`rounded bg-yellow-500 p-3`}>
+-------
+Delete The Following Code:
+-------
+                            <ContentContainer>
+                                <p css={tw`text-sm text-yellow-900`}>
+                                    This server is currently being transferred to another node and all actions
+-------------------
+Go to Line 50
+-------
+Delete The Following Code:
+-------
+                            <PowerControls/>
+                        </Can>
+                }
+            </div>
+            <div css={tw`w-full lg:w-3/4 mt-4 lg:mt-0 lg:pl-4`}>
+                <Spinner.Suspense>
+                    <ErrorBoundary>
+                        <ChunkedConsole/>
+                    </ErrorBoundary>
+-------
+Add The Following Code:
+-------
+                    <ServerDetailsBlock/>
+                </Spinner.Suspense>
+                <Spinner.Suspense>
+-------
+Delete The Following Code:
+-------
+                    <ChunkedStatGraphs/>
+                </Spinner.Suspense>
+                <React.Suspense fallback={null}>
+                    {eggFeatures.includes('eula') && <EulaModalFeature/>}
+                    {eggFeatures.includes('java_version') && <JavaVersionModalFeature/>}
+                </React.Suspense>
+            </div>
+        </ServerContentBlock>
+    );
+-----------------------------------------------------
+
+Open / Create The File "resources/scripts/components/server/StatGraphs.tsx"
+
+-------------------
+Go to Line 130
+-------
+Delete The Following Code:
+-------
+    });
+    return (
+        <div css={tw`flex flex-wrap mt-4`}>
+            <div css={tw`w-full sm:w-1/2`}>
+                <TitledGreyBox title={'Memory usage'} icon={faMemory} css={tw`mr-0 sm:mr-4`}>
+-------
+Add The Following Code:
+-------
+        <>
+            <div css={tw`flex-grow`}>
+                <TitledGreyBox title={'Memory usage'} icon={faMemory} css={tw`h-full content-around`}>
+-------
+Delete The Following Code:
+-------
+                    {status !== 'offline' ?
+                        <canvas
+                            id={'memory_chart'}
+                            ref={memoryRef}
+                            aria-label={'Server Memory Usage Graph'}
+                            role={'img'}
+-------
+Add The Following Code:
+-------
+                            css={tw`h-full`}
+-------
+Delete The Following Code:
+-------
+                        />
+                        :
+                        <p css={tw`text-xs text-neutral-400 text-center p-3`}>
+-------------------
+Go to Line 147
+-------
+Delete The Following Code:
+-------
+                    }
+                </TitledGreyBox>
+            </div>
+            <div css={tw`w-full sm:w-1/2 mt-4 sm:mt-0`}>
+                <TitledGreyBox title={'CPU usage'} icon={faMicrochip} css={tw`ml-0 sm:ml-4`}>
+-------
+Add The Following Code:
+-------
+            <div css={tw`flex-grow`}>
+                <TitledGreyBox title={'CPU usage'} icon={faMicrochip} css={tw`h-full content-around`}>
+-------
+Delete The Following Code:
+-------
+                    {status !== 'offline' ?
+                        <canvas id={'cpu_chart'} ref={cpuRef} aria-label={'Server CPU Usage Graph'} role={'img'}/>
+-------
+Add The Following Code:
+-------
+                        <canvas
+                            id={'cpu_chart'}
+                            ref={cpuRef}
+                            aria-label={'Server CPU Usage Graph'}
+                            role={'img'}
+                            css={tw`h-full`}
+                        />
+-------
+Delete The Following Code:
+-------
+                        :
+                        <p css={tw`text-xs text-neutral-400 text-center p-3`}>
+                            Server is offline.
+-------------------
+Go to Line 158
+-------
+Delete The Following Code:
+-------
+                    }
+                </TitledGreyBox>
+            </div>
+        </div>
+-------
+Add The Following Code:
+-------
+        </>
+-------
+Delete The Following Code:
+-------
+    );
+};
+-----------------------------------------------------
+
+You're All Done!
+Nice Job!

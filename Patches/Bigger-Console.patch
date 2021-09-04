@@ -1,0 +1,187 @@
+Index: resources/scripts/components/server/Console.tsx
+===================================================================
+diff --git a/resources/scripts/components/server/Console.tsx b/resources/scripts/components/server/Console.tsx
+--- a/resources/scripts/components/server/Console.tsx	(revision c817a97826de722b97d336feabbb3005952da22b)
++++ b/resources/scripts/components/server/Console.tsx	(revision ea85a3ec709e464b675e2236f6a1ff98ce3a55db)
+@@ -44,7 +44,7 @@
+     allowTransparency: true,
+     fontSize: 12,
+     fontFamily: 'Menlo, Monaco, Consolas, monospace',
+-    rows: 30,
++    rows: Math.round((window.innerHeight - 250) / 14),
+     theme: theme,
+ };
+ 
+@@ -203,7 +203,7 @@
+ 
+     return (
+         <div css={tw`text-xs font-mono relative`}>
+-            <SpinnerOverlay visible={!connected} size={'large'} />
++            <SpinnerOverlay visible={!connected} size={'large'}/>
+             <div
+                 css={[
+                     tw`rounded-t p-2 bg-black w-full`,
+@@ -211,21 +211,21 @@
+                 ]}
+                 style={{ minHeight: '16rem' }}
+             >
+-                <TerminalDiv id={'terminal'} ref={ref} />
++                <TerminalDiv id={'terminal'} ref={ref}/>
+             </div>
+             {canSendCommands &&
+-                <div css={tw`rounded-b bg-neutral-900 text-neutral-100 flex items-baseline`}>
+-                    <div css={tw`flex-shrink-0 p-2 font-bold`}>$</div>
+-                    <div css={tw`w-full`}>
+-                        <CommandInput
+-                            type={'text'}
+-                            placeholder={'Type a command...'}
+-                            aria-label={'Console command input.'}
+-                            disabled={!instance || !connected}
+-                            onKeyDown={handleCommandKeyDown}
+-                        />
+-                    </div>
+-                </div>
++            <div css={tw`rounded-b bg-neutral-900 text-neutral-100 flex items-baseline`}>
++                <div css={tw`flex-shrink-0 p-2 font-bold`}>$</div>
++                <div css={tw`w-full`}>
++                    <CommandInput
++                        type={'text'}
++                        placeholder={'Type a command...'}
++                        aria-label={'Console command input.'}
++                        disabled={!instance || !connected}
++                        onKeyDown={handleCommandKeyDown}
++                    />
++                </div>
++            </div>
+             }
+         </div>
+     );
+Index: resources/scripts/components/server/PowerControls.tsx
+===================================================================
+diff --git a/resources/scripts/components/server/PowerControls.tsx b/resources/scripts/components/server/PowerControls.tsx
+--- a/resources/scripts/components/server/PowerControls.tsx	(revision c817a97826de722b97d336feabbb3005952da22b)
++++ b/resources/scripts/components/server/PowerControls.tsx	(revision ea85a3ec709e464b675e2236f6a1ff98ce3a55db)
+@@ -15,7 +15,7 @@
+     };
+ 
+     return (
+-        <div css={tw`shadow-md bg-neutral-700 rounded p-3 flex text-xs mt-4 justify-center`}>
++        <div css={tw`shadow-md bg-neutral-700 rounded p-3 flex text-xs justify-center`}>
+             <Can action={'control.start'}>
+                 <Button
+                     size={'xsmall'}
+Index: resources/scripts/components/server/ServerConsole.tsx
+===================================================================
+diff --git a/resources/scripts/components/server/ServerConsole.tsx b/resources/scripts/components/server/ServerConsole.tsx
+--- a/resources/scripts/components/server/ServerConsole.tsx	(revision c817a97826de722b97d336feabbb3005952da22b)
++++ b/resources/scripts/components/server/ServerConsole.tsx	(revision ea85a3ec709e464b675e2236f6a1ff98ce3a55db)
+@@ -22,11 +22,21 @@
+     const eggFeatures = ServerContext.useStoreState(state => state.server.data!.eggFeatures, isEqual);
+ 
+     return (
+-        <ServerContentBlock title={'Console'} css={tw`flex flex-wrap`}>
+-            <div css={tw`w-full lg:w-1/4`}>
+-                <ServerDetailsBlock/>
++        <ServerContentBlock title={'Console'} css={tw`flex flex-col space-y-6 md:flex-row md:space-y-0`}>
++            <div css={tw`w-full md:w-3/4 mt-4 md:mt-0 md:pr-4`}>
++                <Spinner.Suspense>
++                    <ErrorBoundary>
++                        <ChunkedConsole/>
++                    </ErrorBoundary>
++                </Spinner.Suspense>
++                <React.Suspense fallback={null}>
++                    {eggFeatures.includes('eula') && <EulaModalFeature/>}
++                    {eggFeatures.includes('java_version') && <JavaVersionModalFeature/>}
++                </React.Suspense>
++            </div>
++            <div css={tw`w-full md:w-1/4 flex flex-col space-y-6`}>
+                 {isInstalling ?
+-                    <div css={tw`mt-4 rounded bg-yellow-500 p-3`}>
++                    <div css={tw`rounded bg-yellow-500 p-3`}>
+                         <ContentContainer>
+                             <p css={tw`text-sm text-yellow-900`}>
+                                 This server is currently running its installation process and most actions are
+@@ -36,7 +46,7 @@
+                     </div>
+                     :
+                     isTransferring ?
+-                        <div css={tw`mt-4 rounded bg-yellow-500 p-3`}>
++                        <div css={tw`rounded bg-yellow-500 p-3`}>
+                             <ContentContainer>
+                                 <p css={tw`text-sm text-yellow-900`}>
+                                     This server is currently being transferred to another node and all actions
+@@ -49,18 +59,12 @@
+                             <PowerControls/>
+                         </Can>
+                 }
+-            </div>
+-            <div css={tw`w-full lg:w-3/4 mt-4 lg:mt-0 lg:pl-4`}>
+                 <Spinner.Suspense>
+-                    <ErrorBoundary>
+-                        <ChunkedConsole/>
+-                    </ErrorBoundary>
++                    <ServerDetailsBlock/>
++                </Spinner.Suspense>
++                <Spinner.Suspense>
+                     <ChunkedStatGraphs/>
+                 </Spinner.Suspense>
+-                <React.Suspense fallback={null}>
+-                    {eggFeatures.includes('eula') && <EulaModalFeature/>}
+-                    {eggFeatures.includes('java_version') && <JavaVersionModalFeature/>}
+-                </React.Suspense>
+             </div>
+         </ServerContentBlock>
+     );
+Index: resources/scripts/components/server/StatGraphs.tsx
+===================================================================
+diff --git a/resources/scripts/components/server/StatGraphs.tsx b/resources/scripts/components/server/StatGraphs.tsx
+--- a/resources/scripts/components/server/StatGraphs.tsx	(revision c817a97826de722b97d336feabbb3005952da22b)
++++ b/resources/scripts/components/server/StatGraphs.tsx	(revision ea85a3ec709e464b675e2236f6a1ff98ce3a55db)
+@@ -129,15 +129,16 @@
+     });
+ 
+     return (
+-        <div css={tw`flex flex-wrap mt-4`}>
+-            <div css={tw`w-full sm:w-1/2`}>
+-                <TitledGreyBox title={'Memory usage'} icon={faMemory} css={tw`mr-0 sm:mr-4`}>
++        <>
++            <div css={tw`flex-grow`}>
++                <TitledGreyBox title={'Memory usage'} icon={faMemory} css={tw`h-full content-around`}>
+                     {status !== 'offline' ?
+                         <canvas
+                             id={'memory_chart'}
+                             ref={memoryRef}
+                             aria-label={'Server Memory Usage Graph'}
+                             role={'img'}
++                            css={tw`h-full`}
+                         />
+                         :
+                         <p css={tw`text-xs text-neutral-400 text-center p-3`}>
+@@ -146,10 +147,16 @@
+                     }
+                 </TitledGreyBox>
+             </div>
+-            <div css={tw`w-full sm:w-1/2 mt-4 sm:mt-0`}>
+-                <TitledGreyBox title={'CPU usage'} icon={faMicrochip} css={tw`ml-0 sm:ml-4`}>
++            <div css={tw`flex-grow`}>
++                <TitledGreyBox title={'CPU usage'} icon={faMicrochip} css={tw`h-full content-around`}>
+                     {status !== 'offline' ?
+-                        <canvas id={'cpu_chart'} ref={cpuRef} aria-label={'Server CPU Usage Graph'} role={'img'}/>
++                        <canvas
++                            id={'cpu_chart'}
++                            ref={cpuRef}
++                            aria-label={'Server CPU Usage Graph'}
++                            role={'img'}
++                            css={tw`h-full`}
++                        />
+                         :
+                         <p css={tw`text-xs text-neutral-400 text-center p-3`}>
+                             Server is offline.
+@@ -157,6 +164,6 @@
+                     }
+                 </TitledGreyBox>
+             </div>
+-        </div>
++        </>
+     );
+ };
