@@ -22,11 +22,21 @@ const ServerConsole = () => {
     const eggFeatures = ServerContext.useStoreState(state => state.server.data!.eggFeatures, isEqual);
 
     return (
-        <ServerContentBlock title={'Console'} css={tw`flex flex-wrap`}>
-            <div css={tw`w-full lg:w-1/4`}>
-                <ServerDetailsBlock/>
+        <ServerContentBlock title={'Console'} css={tw`flex flex-col space-y-6 md:flex-row md:space-y-0`}>
+            <div css={tw`w-full md:w-3/4 mt-4 md:mt-0 md:pr-4`}>
+                <Spinner.Suspense>
+                    <ErrorBoundary>
+                        <ChunkedConsole/>
+                    </ErrorBoundary>
+                </Spinner.Suspense>
+                <React.Suspense fallback={null}>
+                    {eggFeatures.includes('eula') && <EulaModalFeature/>}
+                    {eggFeatures.includes('java_version') && <JavaVersionModalFeature/>}
+                </React.Suspense>
+            </div>
+            <div css={tw`w-full md:w-1/4 flex flex-col space-y-6`}>
                 {isInstalling ?
-                    <div css={tw`mt-4 rounded bg-yellow-500 p-3`}>
+                    <div css={tw`rounded bg-yellow-500 p-3`}>
                         <ContentContainer>
                             <p css={tw`text-sm text-yellow-900`}>
                                 This server is currently running its installation process and most actions are
@@ -36,7 +46,7 @@ const ServerConsole = () => {
                     </div>
                     :
                     isTransferring ?
-                        <div css={tw`mt-4 rounded bg-yellow-500 p-3`}>
+                        <div css={tw`rounded bg-yellow-500 p-3`}>
                             <ContentContainer>
                                 <p css={tw`text-sm text-yellow-900`}>
                                     This server is currently being transferred to another node and all actions
@@ -49,18 +59,12 @@ const ServerConsole = () => {
                             <PowerControls/>
                         </Can>
                 }
-            </div>
-            <div css={tw`w-full lg:w-3/4 mt-4 lg:mt-0 lg:pl-4`}>
                 <Spinner.Suspense>
-                    <ErrorBoundary>
-                        <ChunkedConsole/>
-                    </ErrorBoundary>
+                    <ServerDetailsBlock/>
+                </Spinner.Suspense>
+                <Spinner.Suspense>
                     <ChunkedStatGraphs/>
                 </Spinner.Suspense>
-                <React.Suspense fallback={null}>
-                    {eggFeatures.includes('eula') && <EulaModalFeature/>}
-                    {eggFeatures.includes('java_version') && <JavaVersionModalFeature/>}
-                </React.Suspense>
             </div>
         </ServerContentBlock>
     );
