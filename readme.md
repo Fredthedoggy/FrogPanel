@@ -18,6 +18,10 @@ curl https://raw.githubusercontent.com/Fredthedoggy/frogpanel/installation/Patch
 ```
 Then, rebuild panel assets as shown [here](https://pterodactyl.io/community/customization/panel.html)
 
+### Git Instalation
+If your panel is kept up to date via git (As I Would Recommend), then add the appropriate branch as an upstream to your repo, and merge accordingly.
+See [below](#available-modifications) for branches.
+
 ### Manual
 
 > :warning: Currently Broken. Please use one of the above for now
