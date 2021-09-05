@@ -19,6 +19,9 @@ curl https://raw.githubusercontent.com/Fredthedoggy/frogpanel/installation/Patch
 Then, rebuild panel assets as shown [here](https://pterodactyl.io/community/customization/panel.html)
 
 ### Manual
+
+> :warning: Currently Broken. Please use one of the above for now
+
 To install a patch manually, visit [github.com/Fredthedoggy/frogpanel/tree/installation/Readable](https://github.com/Fredthedoggy/frogpanel/tree/installation/Readable), and select a patch to apply.
 Follow the instructions in the `.txt` file, copy/pasting things into the correct locations.
 
