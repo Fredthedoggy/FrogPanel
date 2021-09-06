@@ -31,7 +31,7 @@ const Clickable: React.FC<{ file: FileObject }> = memo(({ file, children }) => {
             </div>
             :
             <NavLink
-                to={`${match.url}${file.isFile ? '/edit' : ''}#${encodePathSegments(join(directory, file.name))}`}
+                to={`${match.url.endsWith('/edit') ? match.url.slice(0, match.url.length - 5) : match.url}${file.isFile ? '/edit' : ''}#${encodePathSegments(join(directory, file.name))}`}
                 css={tw`flex flex-1 text-neutral-300 no-underline p-3 overflow-hidden truncate`}
             >
                 {children}
@@ -39,7 +39,7 @@ const Clickable: React.FC<{ file: FileObject }> = memo(({ file, children }) => {
     );
 }, isEqual);
 
-const FileObjectRow = ({ file }: { file: FileObject }) => (
+const FileObjectRow = ({ file, details }: { file: FileObject, details: boolean }) => (
     <Row
         key={file.name}
         onContextMenu={e => {
@@ -47,11 +47,19 @@ const FileObjectRow = ({ file }: { file: FileObject }) => (
             window.dispatchEvent(new CustomEvent(`pterodactyl:files:ctx:${file.key}`, { detail: e.clientX }));
         }}
     >
-        <SelectFileCheckbox name={file.name}/>
+        { details &&
+            <SelectFileCheckbox name={file.name}/>
+        }
         <Clickable file={file}>
-            <div css={tw`flex-none self-center text-neutral-400 ml-6 mr-4 text-lg pl-3`}>
+            <div css={`
+${tw`flex-none self-center text-neutral-400 ml-0 mr-4 text-lg pl-1`}
+${details && tw`ml-6 pl-3`}
+`}
+            >
                 {file.isFile ?
-                    <FontAwesomeIcon icon={file.isSymlink ? faFileImport : file.isArchiveType() ? faFileArchive : faFileAlt}/>
+                    <FontAwesomeIcon
+                        icon={file.isSymlink ? faFileImport : file.isArchiveType() ? faFileArchive : faFileAlt}
+                    />
                     :
                     <FontAwesomeIcon icon={faFolder}/>
                 }
@@ -59,11 +67,12 @@ const FileObjectRow = ({ file }: { file: FileObject }) => (
             <div css={tw`flex-1 truncate`}>
                 {file.name}
             </div>
-            {file.isFile &&
+            {file.isFile && details &&
             <div css={tw`w-1/6 text-right mr-4 hidden sm:block`}>
                 {bytesToHuman(file.size)}
             </div>
             }
+            {details &&
             <div
                 css={tw`w-1/5 text-right mr-4 hidden md:block`}
                 title={file.modifiedAt.toString()}
@@ -73,7 +82,7 @@ const FileObjectRow = ({ file }: { file: FileObject }) => (
                     :
                     formatDistanceToNow(file.modifiedAt, { addSuffix: true })
                 }
-            </div>
+            </div>}
         </Clickable>
         <FileDropdownMenu file={file}/>
     </Row>
