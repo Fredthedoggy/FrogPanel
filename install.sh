@@ -1,5 +1,4 @@
 while true; do
-  cd /var/www/pterodactyl || exit
   echo " To See All Available Patches, See https://github.com/Fredthedoggy/frogpanel/tree/addons/Patches"
   PATCHIN=""
   PATCH=""
