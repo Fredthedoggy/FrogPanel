@@ -5,7 +5,7 @@ import { bytesToMegabytes } from '@/helpers';
 import merge from 'deepmerge';
 import TitledGreyBox from '@/components/elements/TitledGreyBox';
 import { faMemory, faMicrochip } from '@fortawesome/free-solid-svg-icons';
-import tw from 'twin.macro';
+import tw, { theme as th } from 'twin.macro';
 import { SocketEvent } from '@/components/server/events';
 import useWebsocketEvent from '@/plugins/useWebsocketEvent';
 
@@ -28,7 +28,7 @@ const chartDefaults = (ticks?: Chart.TickOptions | undefined): ChartConfiguratio
             line: {
                 tension: 0.3,
                 backgroundColor: 'rgba(15, 178, 184, 0.45)',
-                borderColor: '#d06593',
+                borderColor: th`colors.secondary.400`.toString(),
             },
         },
         scales: {
@@ -43,8 +43,8 @@ const chartDefaults = (ticks?: Chart.TickOptions | undefined): ChartConfiguratio
             yAxes: [ {
                 gridLines: {
                     drawTicks: false,
-                    color: '#d06593',
-                    zeroLineColor: '#e0568d',
+                    color: th`colors.secondary.400`.toString(),
+                    zeroLineColor: th`colors.secondary.500`.toString(),
                     zeroLineWidth: 3,
                 },
                 ticks: merge(ticks || {}, {
