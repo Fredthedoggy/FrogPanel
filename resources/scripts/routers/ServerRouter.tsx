@@ -96,10 +96,12 @@ const ServerRouter = ({ match, location }: RouteComponentProps<{ id: string }>) 
         };
     }, [ match.params.id ]);
 
+    const [ panelShown, setPanelShown ] = useState(false);
+
     return (
         <React.Fragment key={'server-router'}>
-            <div css={tw`flex flex-row`}>
-                <SidePanel>
+            <div>
+                <SidePanel panelShown={panelShown} setPanelShown={setPanelShown}>
                     <CSSTransition timeout={150} classNames={'fade'} appear in>
                         <Category name={'SERVER'}>
                             <Link name={'Console'} icon={faTerminal} react link={`${match.url}`} exact/>
@@ -135,8 +137,8 @@ const ServerRouter = ({ match, location }: RouteComponentProps<{ id: string }>) 
                         </Category>
                     </CSSTransition>
                 </SidePanel>
-                <div css={tw`flex-shrink flex-grow pl-56`}>
-                    <NavigationBar/>
+                <div css={tw`flex-shrink flex-grow md:pl-56`} id={'content-container'}>
+                    <NavigationBar setPanelShown={setPanelShown}/>
                     {(!uuid || !id) ?
                         error ?
                             <ServerError message={error}/>
