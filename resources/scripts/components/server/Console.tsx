@@ -207,7 +207,7 @@ export default () => {
             <div
                 css={[
                     tw`rounded-t p-2 bg-black w-full`,
-                    !canSendCommands && tw`rounded-b`,
+                    canSendCommands ? tw`border-b-2 border-secondary-400` : tw`rounded-b`,
                 ]}
                 style={{ minHeight: '16rem' }}
             >

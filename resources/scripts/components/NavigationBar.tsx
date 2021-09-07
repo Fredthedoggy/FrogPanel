@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { Link, NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCogs, faLayerGroup, faSignOutAlt, faUserCircle } from '@fortawesome/free-solid-svg-icons';
-import { useStoreState } from 'easy-peasy';
-import { ApplicationStore } from '@/state';
+import { faBars, faSignOutAlt, faTimes } from '@fortawesome/free-solid-svg-icons';
 import SearchContainer from '@/components/dashboard/search/SearchContainer';
 import tw, { theme } from 'twin.macro';
 import styled from 'styled-components/macro';
+import { useEffect, useState } from 'react';
 
 const Navigation = styled.div`
     ${tw`w-full bg-neutral-900 shadow-md overflow-x-auto`};
@@ -14,17 +12,9 @@ const Navigation = styled.div`
     & > div {
         ${tw`mx-auto w-full flex items-center`};
     }
-
-    & #logo {
-        ${tw`flex-1`};
-
-        & > a {
-            ${tw`text-2xl font-header px-4 no-underline text-neutral-200 hover:text-neutral-100 transition-colors duration-150`};
-        }
-    }
 `;
 
-const RightNavigation = styled.div`
+const NavigationSection = styled.div`
     ${tw`flex h-full items-center justify-center`};
 
     & > a, & > .navigation-link {
@@ -35,40 +25,43 @@ const RightNavigation = styled.div`
         }
 
         &:active, &:hover, &.active {
-            box-shadow: inset 0 -2px ${theme`colors.cyan.700`.toString()};
+            ${tw`border-b-2 border-secondary-400`};
         }
     }
 `;
 
-export default () => {
-    const name = useStoreState((state: ApplicationStore) => state.settings.data!.name);
-    const rootAdmin = useStoreState((state: ApplicationStore) => state.user.data!.rootAdmin);
+export default (props: { setPanelShown: React.Dispatch<React.SetStateAction<boolean>> }) => {
+    const [ windowSize, setWindowSize ] = useState({
+        width: window.innerWidth,
+        height: window.innerHeight,
+    });
+    useEffect(() => {
+        function handleResize () {
+            setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+        }
+
+        window.addEventListener('resize', () => setWindowSize({ width: window.innerWidth, height: window.innerHeight }));
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    const setPanelShown = props.setPanelShown;
 
     return (
         <Navigation>
-            <div css={tw`mx-auto w-full flex items-center`} style={{ maxWidth: '1200px', height: '3.5rem' }}>
-                <div id={'logo'}>
-                    <Link to={'/'}>
-                        {name}
-                    </Link>
-                </div>
-                <RightNavigation>
+            <div css={tw`mx-auto w-full flex items-center`} style={{ height: '3.5rem' }}>
+                {windowSize.width < 768 && (
+                    <NavigationSection>
+                        <a onClick={() => setPanelShown(true)}>
+                            <FontAwesomeIcon icon={faBars}/>
+                        </a>
+                    </NavigationSection>
+                )}
+                <NavigationSection css={tw`ml-auto`}>
                     <SearchContainer/>
-                    <NavLink to={'/'} exact>
-                        <FontAwesomeIcon icon={faLayerGroup}/>
-                    </NavLink>
-                    <NavLink to={'/account'}>
-                        <FontAwesomeIcon icon={faUserCircle}/>
-                    </NavLink>
-                    {rootAdmin &&
-                    <a href={'/admin'} rel={'noreferrer'}>
-                        <FontAwesomeIcon icon={faCogs}/>
-                    </a>
-                    }
                     <a href={'/auth/logout'}>
                         <FontAwesomeIcon icon={faSignOutAlt}/>
                     </a>
-                </RightNavigation>
+                </NavigationSection>
             </div>
         </Navigation>
     );
