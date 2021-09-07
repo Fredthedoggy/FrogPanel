@@ -23,11 +23,17 @@ export function Link (props: { name: string, icon: IconProp, react?: boolean, li
         <NavLink to={props.link} exact={props.exact ?? false} css={tw`flex flex-row`} className={'navigation-link'}
             onClick={() => setPanelShown ? setPanelShown(false) : undefined}
         >
-            <p css={tw`text-lg`}>{props.name}</p><FontAwesomeIcon icon={props.icon} size={'lg'} css={tw`ml-auto`}/>
+            <p css={tw`text-lg`}>{props.name}</p>
+            <div css={tw`w-8 h-8 inline-flex items-center ml-auto`}>
+                <FontAwesomeIcon icon={props.icon} size={'lg'} css={tw`mx-auto`}/>
+            </div>
         </NavLink>
     ) : (
         <a href={props.link} rel={'noreferrer'} css={tw`flex flex-row`} className={'navigation-link'}>
-            <p css={tw`text-lg`}>{props.name}</p><FontAwesomeIcon icon={props.icon} size={'lg'} css={tw`ml-auto`}/>
+            <p css={tw`text-lg`}>{props.name}</p>
+            <div css={tw`w-8 h-8 inline-flex items-center ml-auto`}>
+                <FontAwesomeIcon icon={props.icon} size={'lg'} css={tw`mx-auto`}/>
+            </div>
         </a>
     );
 }
@@ -56,7 +62,7 @@ export default (props: { children?: React.ReactNode, panelShown: boolean, setPan
             left: 0;
             transition-property: left;
 
-            ${tw`duration-1000 md:transition bg-neutral-600 h-screen shadow-lg flex flex-col w-screen md:w-56 px-4 py-2 fixed top-0 md:left-0`};
+            ${tw`duration-1000 md:transition bg-neutral-700 h-screen shadow-lg flex flex-col w-screen md:w-56 px-4 py-2 fixed top-0 md:left-0`};
             ${panelShown ? '' : css`left: calc(0px - 100vw)`};
 
             z-index: 1000;
@@ -70,7 +76,7 @@ export default (props: { children?: React.ReactNode, panelShown: boolean, setPan
                 }
 
                 &:hover {
-                     ${tw`shadow-sm bg-secondary-800`}
+                    ${tw`shadow-sm bg-secondary-800`}
                 }
 
                 &:active, &.active {
