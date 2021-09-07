@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import tw, { theme } from 'twin.macro';
+import tw from 'twin.macro';
 import { useStoreState } from 'easy-peasy';
 import { ApplicationStore } from '@/state';
 import { NavLink } from 'react-router-dom';
@@ -56,7 +56,7 @@ export default (props: { children?: React.ReactNode, panelShown: boolean, setPan
             left: 0;
             transition-property: left;
 
-            ${tw`duration-1000 md:transition bg-primary-600 h-screen shadow-lg flex flex-col w-screen md:w-56 px-4 py-2 fixed top-0 md:left-0`};
+            ${tw`duration-1000 md:transition bg-neutral-600 h-screen shadow-lg flex flex-col w-screen md:w-56 px-4 py-2 fixed top-0 md:left-0`};
             ${panelShown ? '' : css`left: calc(0px - 100vw)`};
 
             z-index: 1000;
