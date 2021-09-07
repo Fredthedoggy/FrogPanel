@@ -22,7 +22,7 @@ const PowerControls = () => {
                     color={'green'}
                     isSecondary
                     disabled={status !== 'offline'}
-                    css={tw`sm:flex-grow lg:flex-grow-0`}
+                    css={tw`flex-grow lg:flex-grow-0 ml-2`}
                     onClick={e => {
                         e.preventDefault();
                         sendPowerCommand('start');
@@ -36,7 +36,7 @@ const PowerControls = () => {
                     size={'xsmall'}
                     isSecondary
                     disabled={!status}
-                    css={tw`sm:flex-grow lg:flex-grow-0`}
+                    css={tw`flex-grow lg:flex-grow-0`}
                     onClick={e => {
                         e.preventDefault();
                         sendPowerCommand('restart');
