@@ -17,7 +17,7 @@ import { usePersistedState } from '@/plugins/usePersistedState';
 import { SocketEvent, SocketRequest } from '@/components/server/events';
 
 const theme = {
-    background: th`colors.neutral.900`.toString(),
+    background: th`colors.black`.toString(),
     cursor: 'transparent',
     black: th`colors.black`.toString(),
     red: '#E54B4B',
@@ -206,7 +206,7 @@ export default () => {
             <SpinnerOverlay visible={!connected} size={'large'}/>
             <div
                 css={[
-                    tw`rounded-t p-2 bg-neutral-900 w-full`,
+                    tw`rounded-t p-2 bg-black w-full`,
                     canSendCommands ? tw`border-b-2 border-secondary-400` : tw`rounded-b`,
                 ]}
                 style={{ minHeight: '16rem' }}
