@@ -51,6 +51,21 @@ This modification shows all files in the current directory next to the file edit
 This modification makes the console GUI taller, by moving the resource graphs to the side, instead of below the console.
 ![Bigger-Console Screenshot](https://fredthedoggy.nothing-to-see-he.re/593ltu4R8.png "Bigger-Console")
 
+## Themes
+There are also some pre-combined themes with multiple addons and or custom features, which use a different install proccess:
+> Start by creating a new directory to clone into.
+> Run `git clone -b {branch} https://github.com/Fredthedoggy/FrogPanel.git`, replacing `{branch}` with the theme's branch. (eg. `fredthedoggy/zing-theme`)
+> Copy all files in the newly cloned directory into your pterodactyl install (eg. `/var/www/pterodactyl`)
+> Then, rebuild panel assets as shown [here](https://pterodactyl.io/community/customization/panel.html)
+
+### Zing Theme
+- **Supported Pterodactyl Version(s)**: `1.5.1`
+- **Github Branch**: [`fredthedoggy/zing-theme`](https://github.com/Fredthedoggy/frogpanel/tree/fredthedoggy/zing-theme)
+
+This theme adds the `Files-In-Editor`, and `Bigger-Console` Addons, as well as a fancy sidebar, and a new color scheme!
+![Zing Theme Screenshot](https://fredthedoggy.nothing-to-see-he.re/59jXfKib4.png "Zing Theme")
+![Zing Theme Screenshot Mobile](https://fredthedoggy.nothing-to-see-he.re/59jXnJEpQ.gif "Zing Theme Mobile")
+
 ## Contributing
 
 ### Custom Modifications
