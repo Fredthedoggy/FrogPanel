@@ -18,7 +18,7 @@ const StopOrKillButton = ({ onPress }: { onPress: (action: PowerAction) => void 
             color={'red'}
             size={'xsmall'}
             disabled={!status || status === 'offline'}
-            css={tw`flex-grow lg:flex-grow-0 mr-2`}
+            css={tw`sm:flex-grow lg:flex-grow-0 mr-2`}
             onClick={e => {
                 e.preventDefault();
                 onPress(clicked ? 'kill' : 'stop');
