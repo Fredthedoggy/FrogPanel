@@ -28,7 +28,7 @@ const chartDefaults = (ticks?: Chart.TickOptions | undefined): ChartConfiguratio
             line: {
                 tension: 0.3,
                 backgroundColor: 'rgba(15, 178, 184, 0.45)',
-                borderColor: '#32D0D9',
+                borderColor: '#d06593',
             },
         },
         scales: {
@@ -43,8 +43,8 @@ const chartDefaults = (ticks?: Chart.TickOptions | undefined): ChartConfiguratio
             yAxes: [ {
                 gridLines: {
                     drawTicks: false,
-                    color: 'rgba(229, 232, 235, 0.15)',
-                    zeroLineColor: 'rgba(15, 178, 184, 0.45)',
+                    color: '#d06593',
+                    zeroLineColor: '#e0568d',
                     zeroLineWidth: 3,
                 },
                 ticks: merge(ticks || {}, {
