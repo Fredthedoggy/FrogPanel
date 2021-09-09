@@ -3,7 +3,7 @@ FrogPanel is a set of Pterodactyl Modifications by [Fredthedoggy](https://github
 
 All Modifications are Made on Separate [Branches](https://github.com/Fredthedoggy/frogpanel/branches) of the Repository, and Distributed as git patch files.
 
-## Installing
+## Installing (Addons, Not Themes! See [here](#themes) for themes)
 
 ### Automatic
 To install patches automatically, run the following command & follow the prompts
@@ -33,7 +33,7 @@ Follow the instructions in the `.txt` file, copy/pasting things into the correct
 
 Then, rebuild panel assets as shown [here](https://pterodactyl.io/community/customization/panel.html)
 
-## Available Modifications
+## Available Modifications (Addons, Not Themes! See [here](#themes) for themes)
 
 ### Files In Editor
  - **Name**: `Files-In-Editor`
