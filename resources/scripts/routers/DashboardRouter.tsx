@@ -9,7 +9,7 @@ import TransitionRouter from '@/TransitionRouter';
 import { CSSTransition } from 'react-transition-group';
 import SidePanel, { Category, Link } from '@/components/SidePanel';
 import tw from 'twin.macro';
-import { faCog, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
+import { faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
 
 export default ({ location }: RouteComponentProps) => {
     const [ panelShown, setPanelShown ] = useState(false);

@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Modal, { RequiredModalProps } from '@/components/elements/Modal';
 import { Field, Form, Formik, FormikHelpers, useFormikContext } from 'formik';
 import { Actions, useStoreActions, useStoreState } from 'easy-peasy';
 import { object, string } from 'yup';
@@ -9,19 +8,17 @@ import InputSpinner from '@/components/elements/InputSpinner';
 import getServers from '@/api/getServers';
 import { Server } from '@/api/server/getServer';
 import { ApplicationStore } from '@/state';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import tw from 'twin.macro';
 import Input from '@/components/elements/Input';
-
-type Props = RequiredModalProps;
 
 interface Values {
     term: string;
 }
 
 const ServerResult = styled(Link)`
-    ${tw`flex items-center bg-neutral-900 p-4 rounded border-l-4 border-neutral-900 no-underline transition-all duration-150`};
+    ${tw`flex items-center bg-neutral-800 p-4 rounded border-l-4 border-neutral-800 no-underline transition-all duration-150`};
 
     &:hover {
         ${tw`shadow border-cyan-500`};
@@ -44,11 +41,19 @@ const SearchWatcher = () => {
     return null;
 };
 
-export default ({ ...props }: Props) => {
+export default ({ ...props }: {
+    visible: boolean;
+    appear: boolean;
+    onDismissed: () => void;
+}) => {
     const ref = useRef<HTMLInputElement>(null);
     const isAdmin = useStoreState(state => state.user.data!.rootAdmin);
     const [ servers, setServers ] = useState<Server[]>([]);
-    const { clearAndAddHttpError, clearFlashes } = useStoreActions((actions: Actions<ApplicationStore>) => actions.flashes);
+    const history = useHistory();
+    const {
+        clearAndAddHttpError,
+        clearFlashes,
+    } = useStoreActions((actions: Actions<ApplicationStore>) => actions.flashes);
 
     const search = debounce(({ term }: Values, { setSubmitting }: FormikHelpers<Values>) => {
         clearFlashes('search');
@@ -70,24 +75,39 @@ export default ({ ...props }: Props) => {
         }
     }, [ props.visible ]);
 
-    // Formik does not support an innerRef on custom components.
-    const InputWithRef = (props: any) => <Input autoFocus {...props} ref={ref}/>;
+    const divRef: React.RefObject<HTMLInputElement> = React.createRef();
+
+    useEffect(() => {
+        function handleClickOutside (event: MouseEvent) {
+            if (!event.target || !(event.target instanceof HTMLElement) || (divRef && divRef.current?.contains(event.target))) {
+                props.onDismissed();
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    const InputWithRef = (props: any) => <Input autoFocus {...props} autoComplete={'off'} css={tw`h-10`} ref={ref}/>;
 
     return (
         <Formik
+            ref={divRef}
             onSubmit={search}
             validationSchema={object().shape({
-                term: string().min(3, 'Please enter at least three characters to begin searching.'),
+                term: string().min(3, 'Please Use 3 or More Characters.'),
             })}
             initialValues={{ term: '' } as Values}
         >
             {({ isSubmitting }) => (
-                <Modal {...props}>
+                <div
+                    css={`${tw`flex flex-col rounded-md bg-neutral-900 z-40 mb-auto p-2`} ${props.visible ? tw`block` : tw`hidden`}`}
+                >
                     <Form>
                         <FormikFieldWrapper
                             name={'term'}
-                            label={'Search term'}
-                            description={'Enter a server name, uuid, or allocation to begin searching.'}
                         >
                             <SearchWatcher/>
                             <InputSpinner visible={isSubmitting}>
@@ -102,14 +122,20 @@ export default ({ ...props }: Props) => {
                                 <ServerResult
                                     key={server.uuid}
                                     to={`/server/${server.id}`}
-                                    onClick={() => props.onDismissed()}
+                                    onClick={() => {
+                                        history.push(`/server/${server.id}`);
+                                        props.onDismissed();
+                                    }}
                                 >
                                     <div css={tw`flex-1 mr-4`}>
                                         <p css={tw`text-sm`}>{server.name}</p>
                                         <p css={tw`mt-1 text-xs text-neutral-400`}>
                                             {
                                                 server.allocations.filter(alloc => alloc.isDefault).map(allocation => (
-                                                    <span key={allocation.ip + allocation.port.toString()}>{allocation.alias || allocation.ip}:{allocation.port}</span>
+                                                    <span
+                                                        key={allocation.ip + allocation.port.toString()}
+                                                    >{allocation.alias || allocation.ip}:{allocation.port}
+                                                    </span>
                                                 ))
                                             }
                                         </p>
@@ -124,7 +150,7 @@ export default ({ ...props }: Props) => {
                         }
                     </div>
                     }
-                </Modal>
+                </div>
             )}
         </Formik>
     );
