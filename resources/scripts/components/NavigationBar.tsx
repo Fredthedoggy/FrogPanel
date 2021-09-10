@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faSignOutAlt, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import SearchContainer from '@/components/dashboard/search/SearchContainer';
-import tw, { theme } from 'twin.macro';
+import tw from 'twin.macro';
 import styled from 'styled-components/macro';
 import { useEffect, useState } from 'react';
 
 const Navigation = styled.div`
-    ${tw`w-full bg-neutral-900 shadow-md overflow-x-auto`};
+    ${tw`w-full bg-neutral-900 shadow-md overflow-x-auto overflow-visible`};
 
     & > div {
         ${tw`mx-auto w-full flex items-center`};
@@ -18,14 +18,14 @@ const NavigationSection = styled.div`
     ${tw`flex h-full items-center justify-center`};
 
     & > a, & > .navigation-link {
-        ${tw`flex items-center h-full no-underline text-neutral-300 px-6 cursor-pointer transition-all duration-150`};
+        ${tw`flex items-center h-full no-underline text-neutral-300 px-6 cursor-pointer transition-all duration-150 border-secondary-400`};
 
         &:active, &:hover {
             ${tw`text-neutral-100 bg-black`};
         }
 
         &:active, &:hover, &.active {
-            ${tw`border-b-2 border-secondary-400`};
+            ${tw`border-b-2`};
         }
     }
 `;
