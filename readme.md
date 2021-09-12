@@ -37,7 +37,7 @@ Then, rebuild panel assets as shown [here](https://pterodactyl.io/community/cust
 
 ### Files In Editor
  - **Name**: `Files-In-Editor`
- - **Supported Pterodactyl Version(s)**: `1.5.1`
+ - **Supported Pterodactyl Version(s)**: `1.6`
  - **Github Branch**: [`fredthedoggy/view-files-in-editor`](https://github.com/Fredthedoggy/frogpanel/tree/fredthedoggy/view-files-in-editor)
 
 This modification shows all files in the current directory next to the file editing tab, for ease-of-use when editing multiple files at once.
@@ -45,7 +45,7 @@ This modification shows all files in the current directory next to the file edit
 
 ### Bigger Console
 - **Name**: `Bigger-Console`
-- **Supported Pterodactyl Version(s)**: `1.5.1`
+- **Supported Pterodactyl Version(s)**: `1.6`
 - **Github Branch**: [`fredthedoggy/bigger-console`](https://github.com/Fredthedoggy/frogpanel/tree/fredthedoggy/bigger-console)
 
 This modification makes the console GUI taller, by moving the resource graphs to the side, instead of below the console.
