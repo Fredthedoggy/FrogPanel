@@ -4,7 +4,7 @@ while true; do
   PATCH=""
   read -p " Select Patch by Name: " PATCHIN
   PATCH=${PATCHIN%.patch}
-  if ! curl --fail https://raw.githubusercontent.com/Fredthedoggy/frogpanel/addons/Patches/${PATCH}.patch >/dev/null 2>&1; then
+  if ! curl --fail https://raw.githubusercontent.com/Fredthedoggy/FrogPanel/installation/Patches/${PATCH}.patch >/dev/null 2>&1; then
     echo " Invalid Patch. Aborting."
     break
   fi
@@ -12,7 +12,7 @@ while true; do
     echo " Git Is Missing Aborting."
     break
   fi
-  curl https://raw.githubusercontent.com/Fredthedoggy/frogpanel/addons/Patches/${PATCH}.patch | git apply -v
+  curl https://raw.githubusercontent.com/Fredthedoggy/FrogPanel/installation/Patches/${PATCH}.patch | git apply -v
   if ! command -v npm >/dev/null 2>&1; then
     if ! command -v apt >/dev/null 2>&1; then
       echo "Non Debian/Ubuntu System Detected. Please Rebuild Assets Manually https://pterodactyl.io/community/customization/panel.html"
