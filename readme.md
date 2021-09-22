@@ -59,7 +59,7 @@ There are also some pre-combined themes with multiple addons and or custom featu
 > Then, rebuild panel assets as shown [here](https://pterodactyl.io/community/customization/panel.html)
 
 ### Zing Theme
-- **Supported Pterodactyl Version(s)**: `1.5.1`
+- **Supported Pterodactyl Version(s)**: `1.6.2`
 - **Github Branch**: [`fredthedoggy/zing-theme`](https://github.com/Fredthedoggy/frogpanel/tree/fredthedoggy/zing-theme)
 
 This theme adds the `Files-In-Editor`, and `Bigger-Console` Addons, as well as a fancy sidebar, and a new color scheme!
