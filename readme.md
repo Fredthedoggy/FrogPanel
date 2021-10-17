@@ -1,4 +1,11 @@
-# FrogPanel
+### Table of Contents 
+1. [Frog Panel](#frog_panel)
+2. [Themes](#themes)
+3. [Contributing](#contributing)
+
+
+
+# Frog_Panel
 FrogPanel is a set of Pterodactyl Modifications by [Fredthedoggy](https://github.com/Fredthedoggy).
 
 All Modifications are Made on Separate [Branches](https://github.com/Fredthedoggy/frogpanel/branches) of the Repository, and Distributed as git patch files.
