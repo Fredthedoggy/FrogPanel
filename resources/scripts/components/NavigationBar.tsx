@@ -4,6 +4,8 @@ import { faBars, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import SearchContainer from '@/components/dashboard/search/SearchContainer';
 import tw from 'twin.macro';
 import styled from 'styled-components/macro';
+import http from '@/api/http';
+import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import { useEffect, useState } from 'react';
 
 const Navigation = styled.div`
@@ -17,8 +19,8 @@ const Navigation = styled.div`
 const NavigationSection = styled.div`
     ${tw`flex h-full items-center justify-center`};
 
-    & > a, & > .navigation-link {
-        ${tw`flex items-center h-full no-underline text-neutral-300 px-6 cursor-pointer transition-all duration-150 border-secondary-400`};
+    & > a, & > button, & > .navigation-link {
+        ${tw`flex items-center h-full no-underline text-neutral-300 px-6 cursor-pointer transition-all duration-150  border-secondary-400`};
 
         &:active, &:hover {
             ${tw`text-neutral-100 bg-black`};
@@ -35,6 +37,15 @@ export default (props: { setPanelShown: React.Dispatch<React.SetStateAction<bool
         width: window.innerWidth,
         height: window.innerHeight,
     });
+    const [ isLoggingOut, setIsLoggingOut ] = useState(false);
+
+    const onTriggerLogout = () => {
+        setIsLoggingOut(true);
+        http.post('/auth/logout').finally(() => {
+            // @ts-ignore
+            window.location = '/';
+        });
+    };
     useEffect(() => {
         function handleResize () {
             setWindowSize({ width: window.innerWidth, height: window.innerHeight });
@@ -48,6 +59,7 @@ export default (props: { setPanelShown: React.Dispatch<React.SetStateAction<bool
 
     return (
         <Navigation>
+            <SpinnerOverlay visible={isLoggingOut} />
             <div css={tw`mx-auto w-full flex items-center`} style={{ height: '3.5rem' }}>
                 {windowSize.width < 768 && (
                     <NavigationSection>
@@ -58,9 +70,9 @@ export default (props: { setPanelShown: React.Dispatch<React.SetStateAction<bool
                 )}
                 <NavigationSection css={tw`ml-auto`}>
                     <SearchContainer/>
-                    <a href={'/auth/logout'}>
+                    <button onClick={onTriggerLogout}>
                         <FontAwesomeIcon icon={faSignOutAlt}/>
-                    </a>
+                    </button>
                 </NavigationSection>
             </div>
         </Navigation>
